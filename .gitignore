@@ -1,0 +1,7 @@
+# JebBrains IntelliJ IDEA
+.idea
+*.iml
+*.ipr
+
+# Maven
+target
