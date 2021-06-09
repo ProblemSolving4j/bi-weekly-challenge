@@ -10,7 +10,26 @@ import java.util.*;
 class FindIndexOfFirstUniqueElementProblem {
 
     OptionalInt solve(List<?> list) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        int size = list.size();
+        switch (size) {
+            case 0: return OptionalInt.empty();
+            case 1: return OptionalInt.of(0);
+        }
+
+        var occurrences = new HashMap<Object, Integer>();
+        var indices = new LinkedHashMap<Object, Integer>();
+
+        for (int i = 0; i < size; i++) {
+            var element = list.get(i);
+            switch (occurrences.merge(element, 1, Integer::sum)) {
+                case 1 -> indices.put(element, i);
+                case 2 -> indices.remove(element);
+            }
+        }
+
+        return indices.values().stream()
+                .mapToInt(Integer::intValue)
+                .findFirst();
     }
 
 }
