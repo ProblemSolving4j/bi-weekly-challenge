@@ -37,7 +37,6 @@ class LongestCommonWindowProblemTest {
     }
 
     private <T> void shouldFind(List<T> common, List<T> first, List<T> second) {
-        List<T> solution = problem.solve(first, second);
-        assertEquals(common, solution);
+        assertEquals(common, problem.solve(first, second));
     }
 }

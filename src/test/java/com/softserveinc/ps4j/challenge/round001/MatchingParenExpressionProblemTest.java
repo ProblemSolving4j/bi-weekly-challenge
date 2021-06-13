@@ -49,11 +49,11 @@ class MatchingParenExpressionProblemTest {
     }
 
     private void shouldBeValid(String expression) {
-        assertTrue(problem.solve(expression));
+        assertTrue(problem.solve(expression), "expression '%s' should've been valid".formatted(expression));
     }
 
     private void shouldBeInvalid(String expression) {
-        assertFalse(problem.solve(expression));
+        assertFalse(problem.solve(expression),  "expression '%s' should've been invalid".formatted(expression));
     }
 
 }
