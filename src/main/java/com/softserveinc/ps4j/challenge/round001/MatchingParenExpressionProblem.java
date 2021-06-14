@@ -35,7 +35,7 @@ class MatchingParenExpressionProblem {
                 case '}':
                 case ')':
                     if (expressions.size() == 0
-                            || !expressions.get(expressions.size() - 1).close(ch)) {
+                            || !expressions.get(expressions.size() - 1).closeWith(ch)) {
                         return false;
                     } else {
                         expressions.remove(expressions.size() - 1);
@@ -44,7 +44,7 @@ class MatchingParenExpressionProblem {
             }
         }
 
-        return expressions.size() <= 0;
+        return expressions.size() == 0;
     }
 
     private class Expression {
@@ -54,7 +54,7 @@ class MatchingParenExpressionProblem {
             this.openingSymbol = openingSymbol;
         }
 
-        private boolean close (char closingSymbol) {
+        private boolean closeWith (char closingSymbol) {
             return closingSymbol == SYMBOL_MATCHING.get(openingSymbol);
         }
     }
