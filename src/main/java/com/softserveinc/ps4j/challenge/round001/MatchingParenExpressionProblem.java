@@ -1,8 +1,6 @@
 package com.softserveinc.ps4j.challenge.round001;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Given an expression string, examine whether the pairs and the orders of
@@ -11,12 +9,6 @@ import java.util.Map;
  * Any non-paren symbols should be ignored.
  */
 class MatchingParenExpressionProblem {
-    private static final Map<Character, Character> SYMBOL_MATCHING = new HashMap<>();
-    static {
-        SYMBOL_MATCHING.put('{', '}');
-        SYMBOL_MATCHING.put('[', ']');
-        SYMBOL_MATCHING.put('(', ')');
-    }
 
     boolean solve(String s) {
 
@@ -49,13 +41,19 @@ class MatchingParenExpressionProblem {
 
     private class Expression {
         char openingSymbol;
+        char closingSymbolExpected;
 
         private Expression (char openingSymbol) {
             this.openingSymbol = openingSymbol;
+            switch (openingSymbol) {
+                case '[' -> closingSymbolExpected = ']';
+                case '{' -> closingSymbolExpected = '}';
+                case '(' -> closingSymbolExpected = ')';
+            }
         }
 
         private boolean closeWith (char closingSymbol) {
-            return closingSymbol == SYMBOL_MATCHING.get(openingSymbol);
+            return closingSymbol == closingSymbolExpected;
         }
     }
 }
