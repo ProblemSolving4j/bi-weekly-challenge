@@ -36,18 +36,16 @@ class CostOfLinkingTrainsProblem {
             trainsList.remove(trainsList.get(0));
             trainsList.remove(trainsList.get(0));
 
-            if (trainsList.size() > 0 ) {
-                var i = 0;
-                while (trainsList.get(i) < newTrain) {
-                    i++;
-                    if (i == trainsList.size()) break;
-                }
+            var i = 0;
+            while (trainsList.get(i) < newTrain) {
+                i++;
+                if (i == trainsList.size()) break;
+            }
 
-                if (trainsList.size() > i) {
-                    trainsList.add(i, newTrain);
-                } else {
-                    trainsList.add(newTrain);
-                }
+            if (i < trainsList.size()) {
+                trainsList.add(i, newTrain);
+            } else {
+                trainsList.add(newTrain);
             }
         }
 
