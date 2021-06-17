@@ -22,10 +22,11 @@ class CostOfLinkingTrainsProblemTest {
                 () -> minCostShouldBe(0),
                 () -> minCostShouldBe(1, 1),
                 () -> minCostShouldBe(3, 1, 2),
-                () -> minCostShouldBe(6, 1, 2, 1),    // (1 + 1) -> (2 + 2) = 2 + 4 = 6
-                () -> minCostShouldBe(9, 1, 2, 3),    // (1 + 2) -> (3 + 3) = 3 + 6 = 9
-                () -> minCostShouldBe(19, 1, 2, 3, 4),// (1 + 2) -> (3 + 3) -> (6 + 4) = 3 + 6 + 10 = 19
-                () -> minCostShouldBe(29, 6, 3, 4, 2) // (2 + 3) -> (5 + 4) -> (9 + 6) = 5 + 9 + 15 = 29
+                () -> minCostShouldBe(6, 1, 2, 1),       // (1 + 1) -> (2 + 2) = 2 + 4 = 6
+                () -> minCostShouldBe(9, 1, 2, 3),       // (1 + 2) -> (3 + 3) = 3 + 6 = 9
+                () -> minCostShouldBe(19, 1, 2, 3, 4),   // (1 + 2) -> (3 + 3) -> (6 + 4) = 3 + 6 + 10 = 19
+                () -> minCostShouldBe(29, 6, 3, 4, 2),   // (2 + 3) -> (5 + 4) -> (9 + 6) = 5 + 9 + 15 = 29
+                () -> minCostShouldBe(15, 1, 1, 3, 1, 1) // (1 + 1), (1 + 1) -> (2 + 2) -> (4 + 3) = 2 + 2 + 4 + 7 = 15
         );
     }
 
