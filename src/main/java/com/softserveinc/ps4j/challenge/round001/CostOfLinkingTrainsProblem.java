@@ -1,6 +1,6 @@
 package com.softserveinc.ps4j.challenge.round001;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.stream.IntStream;
 
 /**
@@ -22,17 +22,35 @@ class CostOfLinkingTrainsProblem {
             return IntStream.of(trains).sum();
         }
 
-        Arrays.sort(trains); // as far as sums are accumulating the least cost will be if we start connecting shortest trains first
+        var cost = 0;
+        var trainsList = new ArrayList<Integer>();
+        for (int train : trains) {
+            trainsList.add(train);
+        }
+        trainsList.sort((o1, o2) -> o1 - o2);
 
-        int newTrain = trains[0] + trains [1];
-        int cost = newTrain;
-
-        for (var i = 2; i < trains.length; i++) {
-            newTrain += trains[i];
+        while (trainsList.size() > 0) {
+            if (trainsList.size() == 2) return cost + trainsList.stream().mapToInt(a -> a).sum();
+            var newTrain = trainsList.get(0) + trainsList.get(1);
             cost += newTrain;
+            trainsList.remove(trainsList.get(0));
+            trainsList.remove(trainsList.get(0));
+
+            if (trainsList.size() > 0 ) {
+                var i = 0;
+                while (trainsList.get(i) < newTrain) {
+                    i++;
+                    if (i == trainsList.size()) break;
+                }
+
+                if (trainsList.size() > i) {
+                    trainsList.add(i, newTrain);
+                } else {
+                    trainsList.add(newTrain);
+                }
+            }
         }
 
         return cost;
     }
-
 }
