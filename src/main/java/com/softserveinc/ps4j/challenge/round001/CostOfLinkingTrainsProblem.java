@@ -22,19 +22,24 @@ class CostOfLinkingTrainsProblem {
             return IntStream.of(trains).sum();
         }
 
+        Arrays.sort(trains);
+
         var cost = 0;
-        var trainsList = new ArrayList<Integer>();
+        var trainsList = new LinkedList<Integer>();
         for (int train : trains) {
             trainsList.add(train);
         }
-        trainsList.sort((o1, o2) -> o1 - o2);
 
         while (trainsList.size() > 0) {
-            if (trainsList.size() == 2) return cost + trainsList.stream().mapToInt(a -> a).sum();
-            var newTrain = trainsList.get(0) + trainsList.get(1);
+            if (trainsList.size() == 2) return cost + trainsList.getFirst() + trainsList.getLast();
+            var newTrain = 0;
+
+            for (var a = 0; a < 2; a++) {
+                newTrain += trainsList.getFirst();
+                trainsList.removeFirst();
+            }
+
             cost += newTrain;
-            trainsList.remove(trainsList.get(0));
-            trainsList.remove(trainsList.get(0));
 
             var i = 0;
             while (trainsList.get(i) < newTrain) {
