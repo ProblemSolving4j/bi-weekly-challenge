@@ -1,6 +1,6 @@
 package com.softserveinc.ps4j.challenge.round001;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Given an expression string, examine whether the pairs and the orders of
@@ -13,7 +13,7 @@ class MatchingParenExpressionProblem {
     boolean solve(String s) {
 
         var ch = (char) 0;
-        var expressions = new ArrayList<Expression>();
+        var expressions = new LinkedList<Expression>();
 
         for (var i = 0; i < s.length(); i++) {
             ch = s.charAt(i);
@@ -27,10 +27,10 @@ class MatchingParenExpressionProblem {
                 case '}':
                 case ')':
                     if (expressions.size() == 0
-                            || !expressions.get(expressions.size() - 1).closeWith(ch)) {
+                            || !expressions.getLast().closeWith(ch)) {
                         return false;
                     } else {
-                        expressions.remove(expressions.size() - 1);
+                        expressions.removeLast();
                     }
                     break;
             }
