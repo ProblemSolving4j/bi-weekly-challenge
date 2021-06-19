@@ -12,15 +12,9 @@ class CostOfLinkingTrainsProblem {
 
     int solve(int[] trains) {
 
-        if (trains.length == 0) {
-            return 0;
-        }
-        if (trains.length == 1) {
-            return trains[0];
-        }
-        if (trains.length == 2) {
-            return IntStream.of(trains).sum();
-        }
+        if (trains.length == 0) return 0;
+        if (trains.length == 1) return trains[0];
+        if (trains.length == 2) return IntStream.of(trains).sum();
 
         Arrays.sort(trains);
 
