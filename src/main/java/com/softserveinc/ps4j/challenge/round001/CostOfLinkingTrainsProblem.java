@@ -1,6 +1,6 @@
 package com.softserveinc.ps4j.challenge.round001;
 
-import java.util.Arrays;
+import java.util.PriorityQueue;
 
 /**
  * We need to link the trains with different numbers of carts into one train.
@@ -18,13 +18,17 @@ class CostOfLinkingTrainsProblem {
             return trains[0];
         }
 
-        Arrays.sort(trains);
+        PriorityQueue<Integer> queue = new PriorityQueue<>(trains.length);
+        for (int train : trains) {
+            queue.add(train);
+        }
 
-        int k = trains.length - 1;
-        int cost = k * (trains[0] + trains[1]);
+        int cost = 0;
+        while (queue.size() > 1) {
+            int sum = queue.poll() + queue.poll();
+            queue.add(sum);
 
-        for (int i = 2; i < trains.length; i++) {
-            cost += (--k) * trains[i];
+            cost += sum;
         }
 
         return cost;
