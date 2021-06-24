@@ -17,7 +17,17 @@ package com.softserveinc.ps4j.challenge.round002;
 class PascalsTriangleProblem {
 
     int[] solve(int row) {
-        throw new UnsupportedOperationException("not yet implemented");
+        int len = row + 1;
+
+        var pascal = new int[len];
+        int prev = pascal[0] = pascal[row] = 1;
+
+        for (int mid = row / 2, i = 1; i <= mid; i++) {
+            // Cast operand to long to avoid overflow on multiplication
+            prev = pascal[i] = pascal[row - i] = (int) ((long) prev * (len - i) / i);
+        }
+
+        return pascal;
     }
 
 }
