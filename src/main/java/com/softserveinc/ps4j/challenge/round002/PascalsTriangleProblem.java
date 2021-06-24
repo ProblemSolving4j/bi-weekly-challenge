@@ -22,7 +22,6 @@ class PascalsTriangleProblem {
         var pt = new int[row + 1];
         pt[0] = pt[row] = 1;
         var k = row / 2;
-        var m = row % 2;
 
         for (var i = 1; i <= k; i++) {
             int n = pt[i - 1] * (row + 1 - i) / i;
