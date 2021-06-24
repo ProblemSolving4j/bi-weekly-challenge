@@ -16,7 +16,40 @@ import java.util.*;
 class MazeTraversalProblem {
 
     Optional<List<Cell>> solve(Maze maze) {
-        throw new UnsupportedOperationException("not yet implemented");
+        var path = new ArrayList<Cell>();
+        return traverse(maze, path, new HashSet<>(), Direction.NONE, maze.getEntry())
+                ? Optional.of(path)
+                : Optional.empty();
+    }
+
+    private boolean traverse(Maze maze, List<Cell> path, Set<Cell> visited, Direction direction, Cell cell) {
+        if (cell.equals(maze.getExit())) {
+            path.add(cell);
+            return true;
+        }
+        if (!maze.canTraverse(cell) || !visited.add(cell)) return false;
+
+        path.add(cell);
+
+        // @formatter:off recursive dfs
+        boolean found = direction != Direction.LEFT  && traverse( maze, path, visited, Direction.RIGHT, cell.right() )
+                     || direction != Direction.UP    && traverse( maze, path, visited, Direction.DOWN , cell.down()  )
+                     || direction != Direction.RIGHT && traverse( maze, path, visited, Direction.LEFT , cell.left()  )
+                     || direction != Direction.DOWN  && traverse( maze, path, visited, Direction.UP   , cell.up()    );
+        // @formatter:on
+
+        if (found) return true;
+        // if the path was not found - backtrack
+        path.remove(path.size() - 1);
+        return false;
+    }
+
+    private enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
+        NONE
     }
 
 }

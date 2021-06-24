@@ -15,7 +15,36 @@ import java.util.*;
 class EstablishConnectionsProblem {
 
     List<List<Node>> solve(Node from) {
-        throw new UnsupportedOperationException("not yet implemented");
+        Set<Node> level0 = from.getConnections();
+        if (level0.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        var distinctNodes = new HashSet<Node>();
+        distinctNodes.add(from);
+        distinctNodes.addAll(level0);
+
+        var connectionsByLevel = new ArrayList<List<Node>>();
+
+        var nextLevel = new ArrayList<>(level0);
+
+        do {
+            connectionsByLevel.add(nextLevel);
+
+            var currentLevel = new ArrayList<Node>();
+
+            for (Node node : nextLevel) {
+                for (Node connection : node.getConnections()) {
+                    if (distinctNodes.add(connection)) {
+                        currentLevel.add(connection);
+                    }
+                }
+            }
+            nextLevel = currentLevel;
+
+        } while (!nextLevel.isEmpty());
+
+        return connectionsByLevel;
     }
 
 }
