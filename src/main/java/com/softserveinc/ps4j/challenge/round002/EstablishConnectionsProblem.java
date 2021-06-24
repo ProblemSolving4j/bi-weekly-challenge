@@ -18,26 +18,20 @@ class EstablishConnectionsProblem {
 
         if (from.getConnections().size() == 0) return List.of();
 
-        var connections = new ArrayList<List<Node>>();
+        var connections = new ArrayDeque<List<Node>>();
         var uniqueNodes = new HashSet<Node>();
         uniqueNodes.add(from);
 
-        var zeroLevelConnection = new ArrayList<Node>();
-        for (Node node : from.getConnections()) {
-            zeroLevelConnection.add(node);
-        }
+        var zeroLevelConnection = new ArrayList<>(from.getConnections());
         connections.add(zeroLevelConnection);
         uniqueNodes.addAll(zeroLevelConnection);
 
-        var i = 0;
         do {
-            var recentLevelConnections = connections.get(i);
             var nextLevelConnections = new ArrayList<Node>();
 
-            for (Node node : recentLevelConnections) {
-                var currentNodeConnections = node.getConnections();
+            for (Node node : connections.getLast()) {
 
-                for (Node connection : currentNodeConnections) {
+                for (Node connection : node.getConnections()) {
                     if (uniqueNodes.add(connection)) {
                         nextLevelConnections.add(connection);
                     }
@@ -46,10 +40,9 @@ class EstablishConnectionsProblem {
 
             if (nextLevelConnections.size() == 0) break;
             connections.add(nextLevelConnections);
-            ++i;
         } while(true);
 
-        return connections;
+        return new ArrayList<>(connections);
     }
 
 }
