@@ -16,7 +16,20 @@ package com.softserveinc.ps4j.challenge.round002;
 class PascalsTriangleProblem {
 
     int[] solve(int row) {
-        throw new UnsupportedOperationException("not yet implemented");
+        if (row == 0) return new int[] {1};
+        if (row == 1) return new int[] {1, 1};
+
+        var pt = new int[row + 1];
+        pt[0] = pt[row] = 1;
+        var k = row / 2;
+        var m = row % 2;
+
+        for (var i = 1; i <= k; i++) {
+            int n = pt[i - 1] * (row + 1 - i) / i;
+            pt[i] = pt[row - i] = n;
+        }
+
+        return pt;
     }
 
 }
