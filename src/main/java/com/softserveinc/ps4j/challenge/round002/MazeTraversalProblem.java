@@ -1,6 +1,7 @@
 package com.softserveinc.ps4j.challenge.round002;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Given a two-dimensional {@link Maze}, return a path
@@ -16,9 +17,53 @@ import java.util.*;
 class MazeTraversalProblem {
 
     Optional<List<Cell>> solve(Maze maze) {
-        throw new UnsupportedOperationException("not yet implemented");
+        Cell start = maze.getEntry();
+        Cell finish = maze.getExit();
+
+        if (isCellBlocked(start, maze) || isCellBlocked(finish, maze)) return Optional.empty();
+
+        var directions = new ArrayList<Function<Cell, Cell>>(4);
+        directions.add(Cell::up);
+        directions.add(Cell::right);
+        directions.add(Cell::down);
+        directions.add(Cell::left);
+
+        var root = new ArrayDeque<Cell>();
+        root.add(start);
+
+        if (explore(maze, directions, root)) {
+            return Optional.of(new ArrayList<>(root));
+        }
+
+        return Optional.empty();
     }
 
+    private boolean isCellBlocked(Cell cell, Maze maze) {
+        return !maze.canTraverse(cell.up())
+                && !maze.canTraverse(cell.right())
+                && !maze.canTraverse(cell.down())
+                && !maze.canTraverse(cell.left());
+    }
+
+    private boolean explore(Maze maze, ArrayList<Function<Cell, Cell>> directions, ArrayDeque<Cell> root) {
+        for (Function<Cell, Cell> direction : directions) {
+            var nextCell = direction.apply(root.getLast());
+            if (nextCell.equals(maze.getExit())) {
+                root.add(maze.getExit());
+                return true;
+            }
+            if (maze.canTraverse(nextCell)
+                    && !root.contains(nextCell)) {
+                root.add(nextCell);
+                if (explore(maze, directions, root)) {
+                    return true;
+                }
+            }
+        }
+
+        root.removeLast();
+        return false;
+    }
 }
 
 record Cell(int x, int y) {
