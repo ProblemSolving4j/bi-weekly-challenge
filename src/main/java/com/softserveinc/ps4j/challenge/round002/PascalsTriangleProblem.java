@@ -20,7 +20,7 @@ class PascalsTriangleProblem {
 
     int[] solve(int rowNumber) {
         if (rowNumber == 0) return new int[]{1};
-        int[] row = new int[rowNumber + 2];
+        int[] row = new int[rowNumber + 1];
         row[0] = 1;
 
         for (int i = 1; i <= rowNumber; i++) {
@@ -28,6 +28,6 @@ class PascalsTriangleProblem {
                 row[j] += row[j - 1];
             }
         }
-        return Arrays.copyOfRange(row, 0, rowNumber + 1);
+        return row;
     }
 }
