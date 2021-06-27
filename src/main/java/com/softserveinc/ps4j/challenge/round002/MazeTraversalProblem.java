@@ -16,7 +16,30 @@ import java.util.*;
 class MazeTraversalProblem {
 
     Optional<List<Cell>> solve(Maze maze) {
-        throw new UnsupportedOperationException("not yet implemented");
+        List<Cell> path = new ArrayList<>();
+        Set<Cell> visited = new HashSet<>();
+        boolean pathExists = solveUtil(maze, maze.getEntry(), path, visited);
+        return pathExists ? Optional.of(path) : Optional.empty();
+    }
+
+    boolean solveUtil(Maze maze, Cell cell, List<Cell> path, Set<Cell> visited) {
+        if (isSafe(cell, maze, visited)) {
+            path.add(cell);
+            visited.add(cell);
+            if (cell.equals(maze.getExit()) ||
+                    solveUtil(maze, cell.up(), path, visited) ||
+                    solveUtil(maze, cell.down(), path, visited) ||
+                    solveUtil(maze, cell.left(), path, visited) ||
+                    solveUtil(maze, cell.right(), path, visited))
+                return true;
+            path.remove(cell);
+            return false;
+        }
+        return false;
+    }
+
+    private boolean isSafe(Cell cell, Maze maze, Set<Cell> visited) {
+        return !visited.contains(cell) && maze.canTraverse(cell);
     }
 
 }
