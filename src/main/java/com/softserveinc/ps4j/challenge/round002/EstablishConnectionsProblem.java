@@ -33,15 +33,15 @@ class EstablishConnectionsProblem {
         while (queue.size() != 0) {
             // Dequeue a vertex from queue and print it
             from = queue.poll();
+            Integer parentLevel = levels.getOrDefault(from, 0);
             for (Node connection : from.getConnections()) {
                 if (!visited.contains(connection.getId())) {
                     visited.add(connection.getId());
                     queue.add(connection);
-                    levels.put(connection, levels.getOrDefault(from, 0) + 1);
+                    levels.put(connection, parentLevel + 1);
                 }
             }
         }
-
         Map<Integer, List<Node>> mapByLevel = levels.keySet().stream().collect(Collectors.groupingBy(levels::get));
         return mapByLevel.entrySet()
                 .stream()
