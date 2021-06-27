@@ -1,6 +1,14 @@
 package com.softserveinc.ps4j.challenge.round002;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Given a graph {@link Node}, return all of its connections grouped by the connection level.
@@ -15,9 +23,32 @@ import java.util.*;
 class EstablishConnectionsProblem {
 
     List<List<Node>> solve(Node from) {
-        throw new UnsupportedOperationException("not yet implemented");
-    }
+        Set<Integer> visited = new HashSet<>();
+        Map<Node, Integer> levels = new HashMap();
+        LinkedList<Node> queue = new LinkedList<>();
 
+        visited.add(from.getId());
+        queue.add(from);
+
+        while (queue.size() != 0) {
+            // Dequeue a vertex from queue and print it
+            from = queue.poll();
+            for (Node connection : from.getConnections()) {
+                if (!visited.contains(connection.getId())) {
+                    visited.add(connection.getId());
+                    queue.add(connection);
+                    levels.put(connection, levels.getOrDefault(from, 0) + 1);
+                }
+            }
+        }
+
+        Map<Integer, List<Node>> mapByLevel = levels.keySet().stream().collect(Collectors.groupingBy(levels::get));
+        return mapByLevel.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+    }
 }
 
 final class Node {
