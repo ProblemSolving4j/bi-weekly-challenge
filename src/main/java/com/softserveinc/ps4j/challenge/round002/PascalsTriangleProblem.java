@@ -16,8 +16,17 @@ package com.softserveinc.ps4j.challenge.round002;
  */
 class PascalsTriangleProblem {
 
-    int[] solve(int row) {
-        throw new UnsupportedOperationException("not yet implemented");
+    int[] solve(int n) {
+        // Calculating all binomial coefficients C(k,n) for the fixed n.
+
+        int[] c = new int[n + 1];
+        c[0] = 1;
+
+        for (int k = 1; k <= n; k++) {
+            c[k] = (c[k - 1] * (n - k + 1)) / k;
+        }
+
+        return c;
     }
 
 }

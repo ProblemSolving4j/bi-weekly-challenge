@@ -14,8 +14,52 @@ import java.util.*;
  */
 class EstablishConnectionsProblem {
 
+    record Entry(Node node, int level) {
+    }
+
+    // Basic BFS
     List<List<Node>> solve(Node from) {
-        throw new UnsupportedOperationException("not yet implemented");
+        List<List<Node>> connections = new ArrayList<>();
+
+        Set<Node> visited = new HashSet<>();
+        Queue<Entry> queue = new LinkedList<>();
+
+        visited.add(from);
+
+        for (Node sibling : from.getConnections()) {
+            visited.add(sibling);
+            queue.add(new Entry(sibling, 1));
+        }
+
+        int currentLevel = 1;
+        List<Node> currentLevelNodes = new ArrayList<>();
+
+        while (!queue.isEmpty()) {
+            Entry e = queue.poll();
+
+            if (e.level > currentLevel) {
+                connections.add(currentLevelNodes);
+
+                currentLevelNodes = new ArrayList<>();
+                currentLevel++;
+            }
+
+            currentLevelNodes.add(e.node);
+
+            for (Node sibling : e.node.getConnections()) {
+                if (!visited.contains(sibling)) {
+                    visited.add(sibling);
+                    queue.add(new Entry(sibling, e.level + 1));
+                }
+            }
+        }
+
+        // May be empty is a node has no connections at all.
+        if (!currentLevelNodes.isEmpty()) {
+            connections.add(currentLevelNodes);
+        }
+
+        return connections;
     }
 
 }

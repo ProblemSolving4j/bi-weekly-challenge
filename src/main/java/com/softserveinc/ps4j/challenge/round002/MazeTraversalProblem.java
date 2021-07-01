@@ -16,7 +16,47 @@ import java.util.*;
 class MazeTraversalProblem {
 
     Optional<List<Cell>> solve(Maze maze) {
-        throw new UnsupportedOperationException("not yet implemented");
+        Cell entry = maze.getEntry();
+        Cell exit = maze.getExit();
+
+        Set<Cell> visitedCells = new HashSet<>();
+
+        LinkedList<Cell> path = new LinkedList<>();
+        visitedCells.add(entry);
+        path.add(entry);
+
+        if (dfs(entry, exit, path, visitedCells, maze)) {
+            return Optional.of(path);
+        }
+
+        return Optional.empty();
+    }
+
+    private boolean dfs(Cell current, Cell target, LinkedList<Cell> path, Set<Cell> visited, Maze maze) {
+        if (current.equals(target)) {
+            // Don't need to add it to the list, it's already there.
+            return true;
+        }
+
+        return tryDirection(current.down(), target, path, visited, maze)
+                || tryDirection(current.up(), target, path, visited, maze)
+                || tryDirection(current.left(), target, path, visited, maze)
+                || tryDirection(current.right(), target, path, visited, maze);
+    }
+
+    private boolean tryDirection(Cell cell, Cell target, LinkedList<Cell> path, Set<Cell> visited, Maze maze) {
+        if (maze.canTraverse(cell) && !visited.contains(cell)) {
+            visited.add(cell);
+            path.addLast(cell);
+
+            if (dfs(cell, target, path, visited, maze)) {
+                return true;
+            }
+
+            path.removeLast();
+        }
+
+        return false;
     }
 
 }
