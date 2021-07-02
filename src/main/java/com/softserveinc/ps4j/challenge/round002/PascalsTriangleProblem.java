@@ -16,7 +16,19 @@ package com.softserveinc.ps4j.challenge.round002;
 class PascalsTriangleProblem {
 
     int[] solve(int row) {
-        throw new UnsupportedOperationException("not yet implemented");
+        int[] result = row == 0 ? new int[]{1} : row == 1 ? new int[]{1, 1} : null;
+        int[] base = {1, 1};
+        if (row > 1) {
+            for (int r = 1; r < row; r++) {
+                result = new int[base.length + 1];
+                result[0] = result[result.length - 1] = 1;
+                for (int c = 1; c < result.length - 1; c++) {
+                    result[c] = base[c - 1] + base[c];
+                }
+                base = new int[result.length];
+                System.arraycopy(result, 0, base, 0, base.length);
+            }
+        }
+        return result;
     }
-
 }

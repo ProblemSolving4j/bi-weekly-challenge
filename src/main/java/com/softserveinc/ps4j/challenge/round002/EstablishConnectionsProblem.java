@@ -15,9 +15,23 @@ import java.util.*;
 class EstablishConnectionsProblem {
 
     List<List<Node>> solve(Node from) {
-        throw new UnsupportedOperationException("not yet implemented");
+        List<List<Node>> connectionsByLevels = new ArrayList<>();
+        solveUtil(from, connectionsByLevels, 0, new ArrayList<>(Arrays.asList(from)));
+        return connectionsByLevels;
     }
 
+
+    private void solveUtil(Node from, List<List<Node>> connectionsByLevels, int currentLevel, List<Node> visited) {
+        if (from.getConnections().size() == 0 || visited.containsAll(from.getConnections())) return;
+        if (connectionsByLevels.size() <= currentLevel) connectionsByLevels.add(new ArrayList<>());
+        List<Node> toVisit = new ArrayList<>();
+        from.getConnections().stream().filter((n) -> !visited.contains(n)).forEach((n) -> toVisit.add(n));
+        from.getConnections().stream().filter((n) -> !visited.contains(n)).forEach((n) -> {
+            connectionsByLevels.get(currentLevel).add(n);
+            visited.add(n);
+        });
+        toVisit.stream().forEach((n) -> solveUtil(n, connectionsByLevels, currentLevel + 1, visited));
+    }
 }
 
 final class Node {

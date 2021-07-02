@@ -16,9 +16,24 @@ import java.util.*;
 class MazeTraversalProblem {
 
     Optional<List<Cell>> solve(Maze maze) {
-        throw new UnsupportedOperationException("not yet implemented");
+        Optional<List<Cell>> path = Optional.of(new ArrayList<>());
+        List<Cell> visited = new ArrayList<>();
+        if (solveUtil(maze.getEntry(), maze, path, visited)) return path;
+        return Optional.empty();
     }
 
+    private boolean solveUtil(Cell from, Maze maze, Optional<List<Cell>> path, List<Cell> visited) {
+        if (!maze.canTraverse(from) | visited.contains(from)) return false;
+        path.get().add(from);
+        visited.add(from);
+        if (from.equals(maze.getExit())) return true;
+        if (solveUtil(from.up(), maze, path, visited)) return true;
+        if (solveUtil(from.down(), maze, path, visited)) return true;
+        if (solveUtil(from.left(), maze, path, visited)) return true;
+        if (solveUtil(from.right(), maze, path, visited)) return true;
+        path.get().remove(from);
+        return false;
+    }
 }
 
 record Cell(int x, int y) {
