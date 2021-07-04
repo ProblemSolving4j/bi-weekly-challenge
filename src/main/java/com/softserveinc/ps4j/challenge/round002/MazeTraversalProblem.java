@@ -15,8 +15,53 @@ import java.util.*;
  */
 class MazeTraversalProblem {
 
+    private Set<Cell> noGo;
+
     Optional<List<Cell>> solve(Maze maze) {
-        throw new UnsupportedOperationException("not yet implemented");
+        noGo = new HashSet<>();
+        Deque<Cell> path = new LinkedList<>();
+        Cell prev, curr, next;
+        curr = maze.getEntry();// track current position separately, so thee full path will be path + curr
+
+        while (true) {
+            prev = path.peekLast();
+            next = getNext(maze, curr, prev); // curr is never null, prev and next might be null here
+            // prev is null - we are on the entry cell
+            // next is null - we have to make a step back from the entry cell
+            if (next != null && !next.equals(prev)) {
+                // step forward
+                path.offerLast(curr);
+                curr = next;
+            } else {
+                // step back
+                noGo.add(curr);
+                curr = path.pollLast();
+            }
+            // curr might be null here meaning we made a step back from the entry cell
+            if (curr == null || curr.equals(maze.getEntry())) {
+                // no path
+                return Optional.empty();
+            } else if (curr.equals(maze.getExit())) {
+                // path found
+                path.offerLast(curr);
+                return Optional.of((List<Cell>) path);
+            }
+        }
+    }
+
+    private Cell getNext(Maze maze, Cell curr, Cell prev) {
+        // next = prev only if no other moves are available
+        for (int d = 0; d < 4; d++) {
+            Cell next = switch (d) {
+                case 0 -> curr.up();
+                case 1 -> curr.right();
+                case 2 -> curr.down();
+                case 3 -> curr.left();
+                default -> throw new IllegalStateException("Unsupported step direction");
+            };
+            if (maze.canTraverse(next) && !noGo.contains(next) && !next.equals(prev)) return next;
+        }
+        return prev;
     }
 
 }

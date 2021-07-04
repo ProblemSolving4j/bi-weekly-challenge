@@ -1,5 +1,7 @@
 package com.softserveinc.ps4j.challenge.round002;
 
+import java.util.Arrays;
+
 /**
  * Pascal's triangle is triangular matrix that looks like this:
  * <pre>
@@ -17,7 +19,19 @@ package com.softserveinc.ps4j.challenge.round002;
 class PascalsTriangleProblem {
 
     int[] solve(int row) {
-        throw new UnsupportedOperationException("not yet implemented");
+        // allocate and init two arrays, their roles (source and target) will rotate
+        int[][] p = new int[2][row + 1];
+        Arrays.fill(p[0], 0);
+        Arrays.fill(p[1], 0);
+        p[0][0] = 1;
+        p[1][0] = 1;
+        for (int i = 1; i < row + 1; i++) {
+            int s = (i + 1) % 2, t = i % 2; // index of source and target arrays for this row
+            for (int j = 1; j < i + 1; j++) { // row i has (i + 1) elements
+                p[t][j] = p[s][j] + p[s][j - 1]; // read data from source and set to target
+            }
+        }
+        return p[row % 2]; // return target array
     }
 
 }

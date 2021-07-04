@@ -14,8 +14,25 @@ import java.util.*;
  */
 class EstablishConnectionsProblem {
 
-    List<List<Node>> solve(Node from) {
-        throw new UnsupportedOperationException("not yet implemented");
+    private Set<Node> visited;
+
+    List<List<Node>> solve(Node root) {
+        if (root.getConnections().isEmpty()) return Collections.emptyList();
+        List<List<Node>> result = new LinkedList<>();
+        visited = new HashSet<>();
+        // tier - list of nodes with the same path length from the root
+        List<Node> tier = new LinkedList<>(root.getConnections()); // tier 0
+        visited.add(root);
+        visited.addAll(tier); // track root and tier 0 nodes as already visited
+        while (!tier.isEmpty()) {
+            result.add(tier);
+            tier = tier.stream()
+                    .flatMap(node -> node.getConnections().stream()) // stream of all adjacent nodes
+                    .distinct() // get rid of duplicate nodes
+                    .filter(node -> visited.add(node)) // need only NOT visited nodes
+                    .toList(); // build next tier
+        }
+        return result;
     }
 
 }
