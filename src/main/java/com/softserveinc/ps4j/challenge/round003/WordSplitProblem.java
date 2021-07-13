@@ -13,7 +13,27 @@ import java.util.Set;
 class WordSplitProblem {
 
     boolean solve(String s, Set<String> dictionary) {
-        throw new UnsupportedOperationException("not yet implemented");
+
+        return split(s, dictionary);
     }
 
+    private boolean split(String s, Set<String> dictionary) {
+        boolean canSplit = false;
+
+        for (String entry : dictionary) {
+            if (s.length() < entry.length()) continue;
+            String word = s.substring(0, entry.length());
+            if (word.equals(entry)) {
+                String newString = s.substring(entry.length());
+                if (newString.length() > 0) {
+                    canSplit = split(newString, dictionary);
+                } else {
+                    canSplit = true;
+                }
+                break;
+            }
+        }
+        
+        return canSplit;
+    }
 }
