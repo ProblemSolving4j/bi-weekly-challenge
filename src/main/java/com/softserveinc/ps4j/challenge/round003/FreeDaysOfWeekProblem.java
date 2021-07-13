@@ -20,6 +20,8 @@ import java.util.Set;
 class FreeDaysOfWeekProblem {
 
     Set<DayOfWeek> solve(List<TimeWindow> schedule) {
+        if (schedule == null) throw new IllegalArgumentException("Schedule cannot be null");
+
         var daysOfWeek = EnumSet.allOf(DayOfWeek.class);
 
         schedule.forEach(s -> {
@@ -50,6 +52,7 @@ record TimeWindow(ZonedDateTime start, Duration duration) {
         var end = start.plus(duration);
         int e = end.getDayOfWeek().getValue();
         int d = (e >= s) ? (e - s) : (e + 7 - s);
+
         for (int i = 1; i <= d; i++) {
             if ((s + i) <= 7) {
                 scheduledDaysOfWeek.add(DayOfWeek.of(s + i));
