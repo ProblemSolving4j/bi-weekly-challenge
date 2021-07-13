@@ -13,6 +13,8 @@ import java.util.Set;
 class WordSplitProblem {
 
     boolean solve(String s, Set<String> dictionary) {
+        if (s == null) throw new IllegalArgumentException("String cannot be null");
+        if (dictionary == null) throw new IllegalArgumentException("Dictionary cannot be null");
 
         return split(s, dictionary);
     }
