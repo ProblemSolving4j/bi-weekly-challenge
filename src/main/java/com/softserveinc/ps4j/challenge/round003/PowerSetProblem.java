@@ -16,6 +16,9 @@ import java.util.Set;
 class PowerSetProblem {
 
     <T> Set<Set<T>> solve(Set<T> set) {
+        if (set == null) throw new IllegalArgumentException("Set cannot be null");
+        if (set.size() > 16) throw new IllegalArgumentException("Set size cannot be greater than 16");
+        if (set.size() == 0) return Set.of(Set.of());
 
         int n = set.size();
         Set<Set<T>> powerSet = new HashSet<>(1 << n);
