@@ -23,15 +23,21 @@ class WordSplitProblem {
         boolean canSplit = false;
 
         for (String entry : dictionary) {
+
             if (s.length() < entry.length()) continue;
+
             String word = s.substring(0, entry.length());
+
             if (word.equals(entry)) {
+
                 String newString = s.substring(entry.length());
+
                 if (newString.length() > 0) {
                     canSplit = split(newString, dictionary);
                 } else {
                     canSplit = true;
                 }
+
                 break;
             }
         }
