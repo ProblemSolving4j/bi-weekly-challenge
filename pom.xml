@@ -8,7 +8,7 @@
     <artifactId>ps4j-challenge</artifactId>
     <version>1.0.0</version>
     <name>ps4j-challenge</name>
-    <url>https://github.com/ProblemSolving4j/bi-weekly-challange</url>
+    <url>https://github.com/ProblemSolving4j/bi-weekly-challenge</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
