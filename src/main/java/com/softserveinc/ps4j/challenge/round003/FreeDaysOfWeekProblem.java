@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 class FreeDaysOfWeekProblem {
 
     Set<DayOfWeek> solve(List<TimeWindow> schedule) {
-        Set<DayOfWeek> busyDays = schedule.stream()
+        EnumSet<DayOfWeek> busyDays = schedule.stream()
                 .map(timeWindow -> {
                     ZonedDateTime start = timeWindow.start();
                     ZonedDateTime end = timeWindow.start().plusNanos(timeWindow.duration().toNanos());
@@ -32,10 +32,8 @@ class FreeDaysOfWeekProblem {
                     return getDaysOfWeek(start, countOfDays);
                 })
                 .flatMap(Set::stream)
-                .collect(Collectors.toSet());
-        Set<DayOfWeek> allDays = Arrays.stream(DayOfWeek.values()).collect(Collectors.toSet());
-        allDays.removeAll(busyDays);
-        return allDays;
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(DayOfWeek.class)));
+        return EnumSet.complementOf(busyDays);
     }
 
     private Set<DayOfWeek> getDaysOfWeek(ZonedDateTime start, int countOfDays) {
