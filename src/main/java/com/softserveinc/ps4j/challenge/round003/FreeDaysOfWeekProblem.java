@@ -2,9 +2,14 @@ package com.softserveinc.ps4j.challenge.round003;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.Period;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Given a schedule consisting of entries represented as {@link TimeWindow} objects,
@@ -18,9 +23,28 @@ import java.util.Set;
 class FreeDaysOfWeekProblem {
 
     Set<DayOfWeek> solve(List<TimeWindow> schedule) {
-        throw new UnsupportedOperationException("not yet implemented");
+        Set<DayOfWeek> busyDays = schedule.stream()
+                .map(timeWindow -> {
+                    ZonedDateTime start = timeWindow.start();
+                    ZonedDateTime end = timeWindow.start().plusNanos(timeWindow.duration().toNanos());
+                    int countOfDays = Period.between(start.toLocalDate(), end.toLocalDate()).getDays();
+                    if (countOfDays >= 7) return EnumSet.allOf(DayOfWeek.class);
+                    return getDaysOfWeek(start, countOfDays);
+                })
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
+        Set<DayOfWeek> allDays = Arrays.stream(DayOfWeek.values()).collect(Collectors.toSet());
+        allDays.removeAll(busyDays);
+        return allDays;
     }
 
+    private Set<DayOfWeek> getDaysOfWeek(ZonedDateTime start, int countOfDays) {
+        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
+        for (int i = 0; i <= countOfDays; i++) {
+            dayOfWeeks.add(start.plusDays(i).getDayOfWeek());
+        }
+        return dayOfWeeks;
+    }
 }
 
 /**
