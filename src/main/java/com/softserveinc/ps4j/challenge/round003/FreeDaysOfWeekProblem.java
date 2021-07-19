@@ -36,12 +36,12 @@ class FreeDaysOfWeekProblem {
         return EnumSet.complementOf(busyDays);
     }
 
-    private Set<DayOfWeek> getDaysOfWeek(ZonedDateTime start, int countOfDays) {
+    private EnumSet<DayOfWeek> getDaysOfWeek(ZonedDateTime start, int countOfDays) {
         Set<DayOfWeek> dayOfWeeks = new HashSet<>();
         for (int i = 0; i <= countOfDays; i++) {
             dayOfWeeks.add(start.plusDays(i).getDayOfWeek());
         }
-        return dayOfWeeks;
+        return EnumSet.copyOf(dayOfWeeks.stream().toList());
     }
 }
 
