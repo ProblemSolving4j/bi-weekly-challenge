@@ -13,7 +13,14 @@ package com.softserveinc.ps4j.challenge.round004;
 class HouseRobberProblem {
 
     int solve(int... houses) {
-        throw new UnsupportedOperationException("not yet implemented");
+        int prev1 = 0;
+        int prev2 = 0;
+        for (int house : houses) {
+            int tmp = prev1;
+            prev1 = Math.max(prev2 + house, prev1);
+            prev2 = tmp;
+        }
+        return prev1;
     }
 
 }
