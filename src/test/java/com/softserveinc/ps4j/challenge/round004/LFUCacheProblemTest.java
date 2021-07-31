@@ -64,18 +64,23 @@ class LFUCacheProblemTest {
         assertNull(lfu.put("k6", "v6"));
         assertEquals(5, lfu.size());
         assertNull(lfu.get("k1"));
+
+        assertEquals("v6", lfu.get("k6"));
         assertEquals("v6", lfu.get("k6"));
         assertEquals("v6", lfu.get("k6"));
 
         assertNull(lfu.put("k7", "v7"));
         assertEquals("v7", lfu.get("k7"));
         assertEquals("v7", lfu.get("k7"));
+        assertEquals("v7", lfu.get("k7"));
         assertNull(lfu.put("k8", "v8"));
+        assertEquals("v8", lfu.get("k8"));
         assertEquals("v8", lfu.get("k8"));
         assertEquals("v8", lfu.get("k8"));
         assertNull(lfu.put("k9", "v9"));
         assertEquals("v9", lfu.get("k9"));
         assertEquals("v9", lfu.get("k9"));
+        assertEquals("v8", lfu.get("k8"));
         assertEquals(5, lfu.size());
         assertNull(lfu.get("k2"));
         assertNull(lfu.get("k3"));
