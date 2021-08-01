@@ -21,9 +21,9 @@ class LFUCacheProblem {
     private static class LFUCacheProblemImpl<K, V> implements LFUCache<K, V> {
 
         private final int capacity;
-        private HashMap<K, ValueWithFrequency<V>> valMap;
+        private final HashMap<K, Entry<V>> valMap;
         private int minFrequency;
-        private HashMap<Integer, Deque<K>> frequencyMap;
+        private final HashMap<Integer, Deque<K>> frequencyMap;
 
         public LFUCacheProblemImpl(int capacity) {
             this.capacity = capacity;
@@ -37,12 +37,10 @@ class LFUCacheProblem {
             if (!valMap.containsKey(key)) {
                 return null;
             }
-            ValueWithFrequency<V> valueWithFrequency = valMap.get(key);
-            int freq = valueWithFrequency.getFrequency();
-            V value = valueWithFrequency.getValue();
-            updateFrequencyMap(key, freq);
-            valMap.put(key, new ValueWithFrequency<>(value, freq + 1));
-            return value;
+            Entry<V> entry = valMap.get(key);
+            updateFrequencyMap(key, entry.frequency);
+            valMap.put(key, new Entry<>(entry.value, entry.frequency + 1));
+            return entry.value;
         }
 
         @Override
@@ -56,15 +54,14 @@ class LFUCacheProblem {
                         frequencyMap.remove(minFrequency);
                     }
                 }
-                valMap.put(key, new ValueWithFrequency<>(value, 1));
+                valMap.put(key, new Entry<>(value, 1));
                 addToFrequencyMap(key, 1);
                 minFrequency = 1;
                 return null;
             } else {
-                ValueWithFrequency<V> prevValue = valMap.get(key);
-                int freq = prevValue.getFrequency();
-                valMap.put(key, new ValueWithFrequency<>(value, freq + 1));
-                return prevValue.getValue();
+                Entry<V> prevEntry = valMap.get(key);
+                valMap.put(key, new Entry<>(value, prevEntry.frequency() + 1));
+                return prevEntry.value();
             }
         }
 
@@ -78,22 +75,12 @@ class LFUCacheProblem {
             return valMap.size();
         }
 
-        private static class ValueWithFrequency<V> {
-            private final int frequency;
-            private final V value;
-
-            public ValueWithFrequency(V value, int frequency) {
-                this.frequency = frequency;
-                this.value = value;
-            }
-
-            public int getFrequency() {
-                return frequency;
-            }
-
-            public V getValue() {
-                return value;
-            }
+        /**
+         * The tuple consisting of a generic value and a frequency.
+         *
+         * @param <V> the type of the value.
+         */
+        record Entry<V>(V value, int frequency) {
         }
 
         private void updateFrequencyMap(K key, int freq) {
@@ -106,27 +93,16 @@ class LFUCacheProblem {
             } else {
                 keys.remove(key);
             }
-            Deque<K> keysNextFreq = frequencyMap.get(freq + 1);
-            if (keysNextFreq == null) {
-                Deque<K> keysN = new LinkedList<>();
-                keysN.add(key);
-                frequencyMap.put(freq + 1, keysN);
-            } else {
-                keysNextFreq.addLast(key);
-                frequencyMap.put(freq + 1, keysNextFreq);
-            }
+            addToFrequencyMap(key, freq + 1);
         }
 
         private void addToFrequencyMap(K key, int freq) {
-            Deque<K> keys = frequencyMap.get(freq);
-            if (keys == null) {
-                Deque<K> keysN = new LinkedList<>();
-                keysN.add(key);
-                frequencyMap.put(freq, keysN);
-            } else {
-                keys.add(key);
-                frequencyMap.put(freq, keys);
+            if (!frequencyMap.containsKey(freq)) {
+                frequencyMap.put(freq, new LinkedList<>());
             }
+            Deque<K> keys = frequencyMap.get(freq);
+            keys.addLast(key);
+            frequencyMap.put(freq, keys);
         }
 
     }
