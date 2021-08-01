@@ -1,5 +1,9 @@
 package com.softserveinc.ps4j.challenge.round004;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Design a data structure that will implement {@link LFUCache}.
  */
@@ -9,7 +13,68 @@ class LFUCacheProblem {
         if (capacity <= 0) {
             throw new IllegalArgumentException("LFU cache capacity should be positive, got " + capacity);
         }
-        throw new UnsupportedOperationException("not yet implemented");
+        return new LFUCacheImpl<>(capacity);
+    }
+
+    static class LFUCacheImpl<K, V> implements LFUCache<K, V> {
+
+        private static class Wrapper<V> {
+            V value;
+            int counter = 0;
+
+            Wrapper(V value) {
+                this.value = value;
+            }
+        }
+
+        private final int capacity;
+        private final Map<K, Wrapper<V>> cache;
+
+        LFUCacheImpl(int capacity) {
+            this.capacity = capacity;
+            cache = new HashMap<>(capacity);
+        }
+
+        @Override
+        public V get(K key) {
+            Wrapper<V> wrapper = cache.get(key);
+            if (wrapper == null) return null;
+            wrapper.counter++;
+            return wrapper.value;
+        }
+
+        @Override
+        public V put(K key, V value) {
+            Wrapper<V> wrapper = cache.get(key);
+            if (wrapper == null) {
+                // add new entry
+                if (cache.size() == capacity) {
+                    Map.Entry<K, Wrapper<V>> leastUsed = Collections.min(cache.entrySet(), (e1, e2) -> {
+                        int c1 = e1.getValue().counter, c2 = e2.getValue().counter;
+                        return c1 == c2 ? 0 : c1 < c2 ? -1 : 1;
+                    });
+                    cache.remove(leastUsed.getKey()); // evict entry
+                }
+                cache.put(key, new Wrapper(value));
+                return null; // old value
+            } else {
+                // replace existing value
+                V oldValue = wrapper.value;
+                wrapper.value = value;
+                wrapper.counter++;
+                return oldValue;
+            }
+        }
+
+        @Override
+        public int capacity() {
+            return capacity;
+        }
+
+        @Override
+        public int size() {
+            return cache.size();
+        }
     }
 
 }
