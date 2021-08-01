@@ -1,12 +1,59 @@
 package com.softserveinc.ps4j.challenge.round004;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * Design a data structure that will implement {@link ChronoStore}.
  */
 class ChronoStoreProblem {
 
     <K, V> ChronoStore<K, V> solve() {
-        throw new UnsupportedOperationException("not yet implemented");
+        return new ChronoStoreProblemImpl<>();
+    }
+
+    private static class ChronoStoreProblemImpl<K, V> implements ChronoStore<K, V> {
+        private final Map<K, TreeMap<Long, V>> map;
+
+        public ChronoStoreProblemImpl() {
+            this.map = new HashMap<>();
+        }
+
+        @Override
+        public void set(K key, V value, long timestamp) {
+            if (!map.containsKey(key)) {
+                map.put(key, new TreeMap<>());
+            }
+            TreeMap<Long, V> timeMap = map.get(key);
+            timeMap.put(timestamp, value);
+        }
+
+        @Override
+        public Entry<V> getLatestBeforeOrEqual(K key, long timestamp) {
+            TreeMap<Long, V> timeMap = map.get(key);
+            if (timeMap == null) {
+                return null;
+            }
+            Long prevTime = timeMap.floorKey(timestamp);
+            if (prevTime == null) {
+                return null;
+            }
+            return new Entry<>(timeMap.get(prevTime), prevTime);
+        }
+
+        @Override
+        public Entry<V> getEarliestAfterOrEqual(K key, long timestamp) {
+            TreeMap<Long, V> timeMap = map.get(key);
+            if (timeMap == null) {
+                return null;
+            }
+            Long nextTime = timeMap.ceilingKey(timestamp);
+            if (nextTime == null) {
+                return null;
+            }
+            return new Entry<>(timeMap.get(nextTime), nextTime);
+        }
     }
 
 }
