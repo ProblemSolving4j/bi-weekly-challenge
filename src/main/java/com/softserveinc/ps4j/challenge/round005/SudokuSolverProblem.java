@@ -3,6 +3,8 @@ package com.softserveinc.ps4j.challenge.round005;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.softserveinc.ps4j.challenge.round005.SudokuBoard.BOARD_SIDE;
+
 /**
  * Solve a Sudoku puzzle by filling the empty cells.
  *
@@ -18,7 +20,83 @@ import java.util.List;
 class SudokuSolverProblem {
 
     void solve(SudokuBoard board) {
-        throw new UnsupportedOperationException("not yet implemented");
+        Cell firstEmpty = findFirstEmpty(board);
+        if (firstEmpty == null) {
+            return;
+        }
+        for (int n = 1; n <= BOARD_SIDE; n++) {
+            SudokuDigit sudokuDigit = SudokuDigit.valueOf(n);
+            if (isValidSoFar(board, firstEmpty, sudokuDigit)) {
+                board.set(firstEmpty.i, firstEmpty.j, sudokuDigit);
+                solve(board);
+                if (isComplete(board)) {
+                    return;
+                }
+            }
+            board.set(firstEmpty.i, firstEmpty.j, null);
+        }
+    }
+
+    private boolean isComplete(SudokuBoard board) {
+        for (int i = 0; i < BOARD_SIDE; i++) {
+            for (int j = 0; j < BOARD_SIDE; j++) {
+                SudokuDigit sudokuDigit = board.get(i, j);
+                if (sudokuDigit == null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private Cell findFirstEmpty(SudokuBoard board) {
+        for (int i = 0; i < BOARD_SIDE; i++) {
+            for (int j = 0; j < BOARD_SIDE; j++) {
+                SudokuDigit sudokuDigit = board.get(i, j);
+                if (sudokuDigit == null) {
+                    return new Cell(i, j);
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isValidSoFar(SudokuBoard board, Cell cell, SudokuDigit sd) {
+        return rowValid(board, cell.i, sd) && colValid(board, cell.j, sd) && blockValid(board, cell.i, cell.j, sd);
+    }
+
+    private boolean rowValid(SudokuBoard board, int row, SudokuDigit sudokuDigit) {
+        for (int j = 0; j < BOARD_SIDE; j++) {
+            if (sudokuDigit.equals(board.get(row, j))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean colValid(SudokuBoard board, int col, SudokuDigit sudokuDigit) {
+        for (int i = 0; i < BOARD_SIDE; i++) {
+            if (sudokuDigit.equals(board.get(i, col))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean blockValid(SudokuBoard board, int row, int col, SudokuDigit sudokuDigit) {
+        int startRow = row - row % 3;
+        int startCol = col - col % 3;
+        for (int k = 0; k < 3; k++) {
+            for (int l = 0; l < 3; l++) {
+                if (sudokuDigit.equals(board.get(k + startRow, l + startCol))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    record Cell(int i, int j) {
     }
 
 }
