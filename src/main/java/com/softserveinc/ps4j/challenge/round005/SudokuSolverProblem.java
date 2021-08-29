@@ -18,6 +18,7 @@ import static com.softserveinc.ps4j.challenge.round005.SudokuBoard.BOARD_SIDE;
  * All the puzzles are solvable and have only 1 valid solution.
  */
 class SudokuSolverProblem {
+    private static final int BLOCK_SIDE = 3;
 
     void solve(SudokuBoard board) {
         Cell firstEmpty = findFirstEmpty(board);
@@ -84,10 +85,10 @@ class SudokuSolverProblem {
     }
 
     private boolean blockValid(SudokuBoard board, int row, int col, SudokuDigit sudokuDigit) {
-        int startRow = row - row % 3;
-        int startCol = col - col % 3;
-        for (int k = 0; k < 3; k++) {
-            for (int l = 0; l < 3; l++) {
+        int startRow = row - row % BLOCK_SIDE;
+        int startCol = col - col % BLOCK_SIDE;
+        for (int k = 0; k < BLOCK_SIDE; k++) {
+            for (int l = 0; l < BLOCK_SIDE; l++) {
                 if (sudokuDigit.equals(board.get(k + startRow, l + startCol))) {
                     return false;
                 }
